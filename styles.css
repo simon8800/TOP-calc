@@ -1,0 +1,59 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    background-color: aqua;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ;
+}
+
+.calculator {
+    height: 50%;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 3px solid black;
+    padding: 5px;
+}
+
+.display {
+    width: 100%;
+    background-color: blue;
+    min-height: 15%;
+    font-size: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    min-height: 10%;
+    gap: 20px;
+}
+
+
+.btn {
+    height: 100%;
+    min-width: 20%;
+    border: 0.5px solid orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.zero {
+    width: 50%
+}
