@@ -12,7 +12,10 @@ I NEED TO BUILD OUT THIS THING!
 // function to change to percentage
 // function to clear screen
 // function to divide numbers, be careful of dividing by 0
-// function to multiply numbers
+
+function multiply(numOne, numTwo) {
+    return numOne * numTwo;
+}
 // function to subtract numbers
 // function to add numbers
 // function to calculate results
@@ -28,5 +31,3 @@ let buttons = document.querySelectorAll(".btn");
 buttons.forEach(button => {
     button.addEventListener('click', onClick);
 })
-
-let nums = [];
