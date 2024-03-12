@@ -7,22 +7,19 @@ I NEED TO BUILD OUT THIS THING!
 */
 
 "use strict";
-// function to divide numbers, be careful of dividing by 0
 function divide(numOne, numTwo) {
     if (numTwo == 0) {
         return NaN;
     }
     return numOne / numTwo;
 }
-// function to multiply numbers
+
 function multiply(numOne, numTwo) {
     return numOne * numTwo;
 }
-// function to subtract numbers
 function subtract(numOne, numTwo) {
     return numOne - numTwo;
 }
-// function to add numbers
 function add(numOne, numTwo) {
     return numOne + numTwo;
 }
@@ -34,11 +31,10 @@ function changeDisplay(num) {
 
 function allClear() {
     operands = [];
-    console.log("ALL CLEAR!")
+    console.log("ALL CLEAR!");
     changeDisplay(0);
 }
 
-// changes sign or turns into a percentage
 function performOtherOp(op) {
     if (operands.length < 3) {
         if (op == "sign") {
@@ -81,7 +77,7 @@ function evaluate(numOne, numTwo, operation) {
     let floatNumOne = parseFloat(numOne);
     let floatNumTwo = parseFloat(numTwo);
     let results;
-    switch(operation) {
+    switch (operation) {
         case "+":
             results = add(floatNumOne, floatNumTwo);
             break;
@@ -95,7 +91,7 @@ function evaluate(numOne, numTwo, operation) {
             results = divide(floatNumOne, floatNumTwo);
             break;
         default:
-            console.log("Hello from func evaluate")
+            console.log("Hello from func evaluate");
     }
     return String(results);
 }
@@ -173,10 +169,6 @@ function onClick(event) {
         return;
     }
 }
-
-
-
-
 
 let display = document.querySelector(".display");
 let buttons = document.querySelectorAll(".btn");
