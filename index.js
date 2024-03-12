@@ -9,32 +9,34 @@ I NEED TO BUILD OUT THIS THING!
 */
 
 "use strict";
-// // function to divide numbers, be careful of dividing by 0
-// function divide(numOne, numTwo) {
-//     if (numTwo == 0) {
-//         return NaN;
-//     }
-//     return numOne / numTwo;
-// }
-// // function to multiply numbers
-// function multiply(numOne, numTwo) {
-//     return numOne * numTwo;
-// }
-// // function to subtract numbers
-// function subtract(numOne, numTwo) {
-//     return numOne - numTwo;
-// }
-// // function to add numbers
-// function add(numOne, numTwo) {
-//     return numOne + numTwo;
-// }
+// function to divide numbers, be careful of dividing by 0
+function divide(numOne, numTwo) {
+    if (numTwo == 0) {
+        return NaN;
+    }
+    return numOne / numTwo;
+}
+// function to multiply numbers
+function multiply(numOne, numTwo) {
+    return numOne * numTwo;
+}
+// function to subtract numbers
+function subtract(numOne, numTwo) {
+    return numOne - numTwo;
+}
+// function to add numbers
+function add(numOne, numTwo) {
+    return numOne + numTwo;
+}
 
 function changeDisplay(num) {
     display.textContent = num;
+    console.log(operands);
 }
 
 function allClear() {
     operands = [];
+    console.log("ALL CLEAR!")
     changeDisplay(0);
 }
 
@@ -75,9 +77,29 @@ function modifyNum(num) {
     if (!operands[lastIndex].includes(".") || numbers.includes(num)) {
         operands[lastIndex] += num;
     }
+}
 
-    console.log(operands);
-    console.log(operands[lastIndex]);
+function evaluate(numOne, numTwo, operation) {
+    let floatNumOne = parseFloat(numOne);
+    let floatNumTwo = parseFloat(numTwo);
+    let results;
+    switch(operation) {
+        case "+":
+            results = add(floatNumOne, floatNumTwo);
+            break;
+        case "-":
+            results = subtract(floatNumOne, floatNumTwo);
+            break;
+        case "*":
+            results = multiple(floatNumOne, floatNumTwo);
+            break;
+        case "/":
+            results = divide(floatNumOne, floatNumTwo);
+            break;
+        default:
+            console.log("Hello from func evaluate")
+    }
+    return String(results);
 }
 
 function onClick(event) {
@@ -95,6 +117,8 @@ function onClick(event) {
             operands.push("0");
             performOtherOp(val);
         } else if (operations.includes(val)) {
+            operands.push("0");
+            operands.push(val);
         }
         console.log(operands);
         changeDisplay(operands[0]);
@@ -118,6 +142,7 @@ function onClick(event) {
     if (operands.length == 2) {
         if (numbers.includes(val) || val == ".") {
             operands.push(val);
+            changeDisplay(operands[2]);
         } else if (operations.includes(val)) {
             operands[1] = val;
         } else if (otherOps.includes(val)) {
@@ -131,13 +156,22 @@ function onClick(event) {
     if (operands.length == 3) {
         if (numbers.includes(val) || val == ".") {
             modifyNum(val);
+            changeDisplay(operands[2]);
         } else if (operations.includes(val)) {
-            // calculate and then replace operands[1]
+            // I have an issue where if I want to perform another op when I have a result already
+            // I want to keep the 2nd number in case the user wants to continue adding the same thing? Or do I not want that?
+            operands[0] = evaluate(operands[0], operands[2], operands[1]);
+            operands[1] = val;
+            operands.pop();
+            changeDisplay(operands[0]);
         } else if (otherOps.includes(val)) {
             performOtherOp(val);
+            changeDisplay(operands[2]);
+        } else if (val == equals) {
+            operands[0] = evaluate(operands[0], operands[2], operands[1]);
+            changeDisplay(operands[0]);
         }
         console.log(operands);
-        changeDisplay(operands[2]);
         return;
     }
 }
@@ -152,7 +186,6 @@ buttons.forEach((button) => {
     button.addEventListener("click", onClick);
 });
 
-let getNumTwo = false;
 let operations = "+-/*";
 let equals = "=";
 let numbers = "01234567890";
