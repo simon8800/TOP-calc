@@ -1,10 +1,8 @@
 /* 
 I NEED TO BUILD OUT THIS THING!
 
-- What happens when a user presses numbers
-- What happens when a user presses an operation
-- What happens if a user presses equals
-- What happens if a user presses equals with only 1 number
+- Get rid of leading zeroes
+- Typing a number after equals issue
 
 */
 
