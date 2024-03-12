@@ -93,7 +93,8 @@ function evaluate(numOne, numTwo, operation) {
         default:
             console.log("Hello from func evaluate");
     }
-    return String(results);
+    results = String(results);
+    return results;
 }
 
 function onClick(event) {
@@ -102,72 +103,13 @@ function onClick(event) {
         allClear();
         return;
     }
+    // if val is num
 
-    // if stack length is 0, either add a number or do nothing
-    if (operands.length == 0) {
-        if (numbers.includes(val) || val == ".") {
-            operands.push(val);
-        } else if (otherOps.includes(val)) {
-            operands.push("0");
-            performOtherOp(val);
-        } else if (operations.includes(val)) {
-            operands.push("0");
-            operands.push(val);
-        }
-        console.log(operands);
-        changeDisplay(operands[0]);
-        return;
-    }
 
-    // if the stack length is 1, then either add num or push operation or change sign or change percentage
-    if (operands.length == 1) {
-        if (numbers.includes(val) || val == ".") {
-            modifyNum(val);
-        } else if (operations.includes(val)) {
-            operands.push(val);
-        } else if (otherOps.includes(val)) {
-            performOtherOp(val);
-        }
-        changeDisplay(operands[0]);
-        return;
-    }
 
-    // if stack length is 2, then either add num or change operation or other op on first num
-    if (operands.length == 2) {
-        if (numbers.includes(val) || val == ".") {
-            operands.push(val);
-            changeDisplay(operands[2]);
-        } else if (operations.includes(val)) {
-            operands[1] = val;
-        } else if (otherOps.includes(val)) {
-            otherOps(val);
-        }
-        console.log(operands);
-        return;
-    }
 
-    // if array length is 3, then modify num, otherOp on second num, or
-    if (operands.length == 3) {
-        if (numbers.includes(val) || val == ".") {
-            modifyNum(val);
-            changeDisplay(operands[2]);
-        } else if (operations.includes(val)) {
-            // I have an issue where if I want to perform another op when I have a result already
-            // I want to keep the 2nd number in case the user wants to continue adding the same thing? Or do I not want that?
-            operands[0] = evaluate(operands[0], operands[2], operands[1]);
-            operands[1] = val;
-            operands.pop();
-            changeDisplay(operands[0]);
-        } else if (otherOps.includes(val)) {
-            performOtherOp(val);
-            changeDisplay(operands[2]);
-        } else if (val == equals) {
-            operands[0] = evaluate(operands[0], operands[2], operands[1]);
-            changeDisplay(operands[0]);
-        }
-        console.log(operands);
-        return;
-    }
+
+
 }
 
 let display = document.querySelector(".display");
@@ -178,6 +120,11 @@ buttons.forEach((button) => {
 
 let operations = "+-/*";
 let equals = "=";
-let numbers = "01234567890";
 let otherOps = "sign%";
 let operands = [];
+let storedNum = ""
+
+function isNum(num) {
+    let nums = "0123456789";
+    return nums.includes(num);
+}
