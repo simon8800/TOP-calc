@@ -28,7 +28,6 @@ function changeDisplay(value) {
     display.textContent = value;
 }
 
-
 function isNum(value) {
     let nums = "0123456789.";
     return nums.includes(value);
@@ -48,18 +47,18 @@ function allClear() {
 
 function clearCurrentOperands() {
     currentOperands = {
-        "numOne": "",
-        "numTwo": "",
-        "op": "",
-    }
+        numOne: "",
+        numTwo: "",
+        op: "",
+    };
 }
 
-function clearOldOperands () {
+function clearOldOperands() {
     oldOperands = {
-        "results": "",
-        "oldNum": "",
-        "oldOp": "",
-    }
+        results: "",
+        oldNum: "",
+        oldOp: "",
+    };
 }
 
 function isOtherOp(op) {
@@ -71,7 +70,10 @@ function performOtherOp(op) {
     let key;
     let number;
 
-    if (currentOperands["op"] == "") {
+    if (oldOperands["results"] && currentOperands["numOne"] == "") {
+        key = "results";
+        number = oldOperands["results"];
+    } else if (currentOperands["op"] == "") {
         key = "numOne";
         number = currentOperands["numOne"];
     } else {
@@ -80,11 +82,19 @@ function performOtherOp(op) {
     }
 
     if (op == "sign") {
-        number = changeSign(number)
-        currentOperands[key] = number;
+        number = changeSign(number);
+        if (key == "results") {
+            oldOperands["results"] = number;
+        } else {
+            currentOperands[key] = number;
+        }
     } else {
         number = changePercent(number);
-        currentOperands[key] = number;
+        if (key == "results") {
+            oldOperands["results"] = number;
+        } else {
+            currentOperands[key] = number;
+        }
     }
 }
 
@@ -118,7 +128,7 @@ function modifyNum(value) {
     if (number == "" && value != ".") {
         number = value;
     } else if (number == "" && value == ".") {
-        number = "0."
+        number = "0.";
     } else if (number != "" && value != ".") {
         number += value;
     } else if (number != "" && value == "." && !number.includes(value)) {
@@ -157,7 +167,7 @@ function evaluate(numOne, numTwo, operation) {
 function moveValues(results, numTwo, operation) {
     oldOperands["results"] = results;
     oldOperands["oldNum"] = numTwo;
-    oldOperands["oldOp"] = operation
+    oldOperands["oldOp"] = operation;
     clearCurrentOperands();
 }
 
@@ -167,7 +177,7 @@ function onClick(event) {
         allClear();
         return;
     }
-    
+
     if (isNum(val)) {
         modifyNum(val);
     }
@@ -178,13 +188,20 @@ function onClick(event) {
             clearOldOperands();
         } else if (currentOperands["numOne"] && currentOperands["numTwo"]) {
             // If two operands already, evaluate to create room for next number
-            evaluate(currentOperands["numOne"], currentOperands["numTwo"], currentOperands["op"]);
+            evaluate(
+                currentOperands["numOne"],
+                currentOperands["numTwo"],
+                currentOperands["op"]
+            );
             currentOperands["numOne"] = oldOperands["results"];
         } else if (currentOperands["numOne"] == "" && oldOperands["results"]) {
             // If there's no operand, then we are working on the previous result
             currentOperands["numOne"] = oldOperands["results"];
             clearOldOperands();
-        } else if (currentOperands["numOne"] == "" && oldOperands["results"] == "") {
+        } else if (
+            currentOperands["numOne"] == "" &&
+            oldOperands["results"] == ""
+        ) {
             // Since default display is 0, we will work with 0
             currentOperands["numOne"] = "0";
         }
@@ -197,13 +214,35 @@ function onClick(event) {
 
     if (val == "=") {
         if (currentOperands["numOne"] && currentOperands["numTwo"]) {
-            evaluate(currentOperands["numOne"], currentOperands["numTwo"], currentOperands["op"]);
-        }   else if (currentOperands["numOne"] && !currentOperands["numTwo"] && currentOperands["op"]) {
+            evaluate(
+                currentOperands["numOne"],
+                currentOperands["numTwo"],
+                currentOperands["op"]
+            );
+        } else if (
+            currentOperands["numOne"] && 
+            !currentOperands["op"]
+        ) {
+            // Happens when a user gets a result, then a new number, and then equals
+            evaluate(currentOperands["numOne"], oldOperands["oldNum"], oldOperands["oldOp"]);
+        } else if (
+            currentOperands["numOne"] &&
+            !currentOperands["numTwo"] &&
+            currentOperands["op"]
+        ) {
             // If only numOne and an op, then we perform it on itself
-            evaluate(currentOperands["numOne"], currentOperands["numOne"], currentOperands["op"]);
-        }   else if (oldOperands["results"]) {
+            evaluate(
+                currentOperands["numOne"],
+                currentOperands["numOne"],
+                currentOperands["op"]
+            );
+        } else if (oldOperands["results"]) {
             // If results then perform previous operations on results
-            evaluate(oldOperands["results"], oldOperands["oldNum"], oldOperands["oldOp"]);
+            evaluate(
+                oldOperands["results"],
+                oldOperands["oldNum"],
+                oldOperands["oldOp"]
+            );
         }
     }
 
@@ -220,7 +259,7 @@ function onClick(event) {
         }
     }
 
-    console.log(currentOperands)
+    console.log(currentOperands);
     console.log(oldOperands);
     console.log("\n");
 }
@@ -232,12 +271,12 @@ buttons.forEach((button) => {
 });
 
 let oldOperands = {
-    "results": "",
-    "oldNum": "",
-    "oldOp": "",
-}
+    results: "",
+    oldNum: "",
+    oldOp: "",
+};
 let currentOperands = {
-    "numOne": "",
-    "numTwo": "",
-    "op": "",
-}
+    numOne: "",
+    numTwo: "",
+    op: "",
+};
