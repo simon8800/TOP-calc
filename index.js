@@ -2,7 +2,7 @@
 I NEED TO BUILD OUT THIS THING!
 
 - Get rid of leading zeroes
-- Typing a number after equals issue
+- Adding decimals
 
 */
 
