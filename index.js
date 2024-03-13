@@ -171,6 +171,38 @@ function moveValues(results, numTwo, operation) {
     clearCurrentOperands();
 }
 
+function cleanNumber(num) {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function onClick(event) {
     let val = event.target.dataset.val;
     if (val == "AC") {
@@ -221,7 +253,8 @@ function onClick(event) {
             );
         } else if (
             currentOperands["numOne"] && 
-            !currentOperands["op"]
+            !currentOperands["op"] && 
+            oldOperands["results"]
         ) {
             // Happens when a user gets a result, then a new number, and then equals
             evaluate(currentOperands["numOne"], oldOperands["oldNum"], oldOperands["oldOp"]);
