@@ -24,14 +24,13 @@ function add(numOne, numTwo) {
     return numOne + numTwo;
 }
 
-function changeDisplay(num) {
-    display.textContent = num;
-    console.log(operands);
+function changeDisplay(value) {
+    display.textContent = value;
 }
 
 
 function isNum(value) {
-    let nums = "0123456789";
+    let nums = "0123456789.";
     return nums.includes(value);
 }
 
@@ -43,6 +42,7 @@ function isOperation(op) {
 function allClear() {
     clearCurrentOperands();
     clearOldOperands();
+    changeDisplay("0");
     console.log("ALL CLEAR!");
 }
 
@@ -62,21 +62,21 @@ function clearOldOperands () {
     }
 }
 
-function performOtherOp(op) {
-    if (operands.length < 3) {
-        if (op == "sign") {
-            operands[0] = changeSign(0);
-        } else {
-            operands[0] = changePercent(0);
-        }
-    } else {
-        if (op == "sign") {
-            operands[2] = changeSign(2);
-        } else {
-            operands[2] = changePercent(2);
-        }
-    }
-}
+// function performOtherOp(op) {
+//     if (operands.length < 3) {
+//         if (op == "sign") {
+//             operands[0] = changeSign(0);
+//         } else {
+//             operands[0] = changePercent(0);
+//         }
+//     } else {
+//         if (op == "sign") {
+//             operands[2] = changeSign(2);
+//         } else {
+//             operands[2] = changePercent(2);
+//         }
+//     }
+// }
 
 function changeSign(index) {
     if (operands[index].includes("-")) {
@@ -92,12 +92,11 @@ function changePercent(index) {
     return String(percentage);
 }
 
-// Select 
-function modifyNum(num) {
+function modifyNum(value) {
     if (currentOperands["op"] == "") {
-        currentOperands["numOne"] += num;
+        currentOperands["numOne"] += value;
     } else {
-        currentOperands["numTwo"] += num;
+        currentOperands["numTwo"] += value;
     }
 }
 
@@ -176,9 +175,22 @@ function onClick(event) {
         }
     }
 
+    if (currentOperands["numOne"] && !currentOperands["numTwo"]) {
+        changeDisplay(currentOperands["numOne"]);
+    } else if (currentOperands["numTwo"]) {
+        changeDisplay(currentOperands["numTwo"]);
+    } else if (oldOperands["results"] != "") {
+        if (oldOperands["results"] != "NaN") {
+            changeDisplay(oldOperands["results"]);
+        } else {
+            alert("Don't divide by zero pls");
+            allClear();
+        }
+    }
+
     console.log(currentOperands)
     console.log(oldOperands);
-    console.log("############################################################################################");
+    console.log("\n");
 }
 
 let display = document.querySelector(".display");
