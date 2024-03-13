@@ -62,42 +62,70 @@ function clearOldOperands () {
     }
 }
 
-// function performOtherOp(op) {
-//     if (operands.length < 3) {
-//         if (op == "sign") {
-//             operands[0] = changeSign(0);
-//         } else {
-//             operands[0] = changePercent(0);
-//         }
-//     } else {
-//         if (op == "sign") {
-//             operands[2] = changeSign(2);
-//         } else {
-//             operands[2] = changePercent(2);
-//         }
-//     }
-// }
+function isOtherOp(op) {
+    let otherOps = "sign%";
+    return otherOps.includes(op);
+}
 
-function changeSign(index) {
-    if (operands[index].includes("-")) {
-        return operands[index].slice(1);
+function performOtherOp(op) {
+    let key;
+    let number;
+
+    if (currentOperands["op"] == "") {
+        key = "numOne";
+        number = currentOperands["numOne"];
     } else {
-        return "-" + operands[index];
+        key = "numTwo";
+        number = currentOperands["numTwo"];
+    }
+
+    if (op == "sign") {
+        number = changeSign(number)
+        currentOperands[key] = number;
+    } else {
+        number = changePercent(number);
+        currentOperands[key] = number;
     }
 }
 
-function changePercent(index) {
-    let num = parseFloat(operands[index]);
+function changeSign(number) {
+    if (number.includes("-")) {
+        return number.slice(1);
+    } else {
+        return "-" + number;
+    }
+}
+
+function changePercent(number) {
+    let num = parseFloat(number);
     let percentage = num / 100;
     return String(percentage);
 }
 
 function modifyNum(value) {
+    let key;
+    let number;
+
     if (currentOperands["op"] == "") {
-        currentOperands["numOne"] += value;
+        key = "numOne";
+        number = currentOperands["numOne"];
     } else {
-        currentOperands["numTwo"] += value;
+        key = "numTwo";
+        number = currentOperands["numTwo"];
     }
+
+    // if the number is nothing, then make the number = value or make it 0.
+    if (number == "" && value != ".") {
+        number = value;
+    } else if (number == "" && value == ".") {
+        number = "0."
+    } else if (number != "" && value != ".") {
+        number += value;
+    } else if (number != "" && value == "." && !number.includes(value)) {
+        number += value;
+    }
+
+    currentOperands[key] = number;
 }
 
 function evaluate(numOne, numTwo, operation) {
@@ -161,6 +189,10 @@ function onClick(event) {
             currentOperands["numOne"] = "0";
         }
         currentOperands["op"] = val;
+    }
+
+    if (isOtherOp(val)) {
+        performOtherOp(val);
     }
 
     if (val == "=") {
