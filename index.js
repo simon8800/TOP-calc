@@ -141,7 +141,7 @@ function evaluate(numOne, numTwo, operation) {
             results = subtract(floatNumOne, floatNumTwo);
             break;
         case "*":
-            results = multiple(floatNumOne, floatNumTwo);
+            results = multiply(floatNumOne, floatNumTwo);
             break;
         case "/":
             results = divide(floatNumOne, floatNumTwo);
