@@ -29,10 +29,37 @@ function changeDisplay(num) {
     console.log(operands);
 }
 
+
+function isNum(value) {
+    let nums = "0123456789";
+    return nums.includes(value);
+}
+
+function isOperation(op) {
+    let operations = "+-/*";
+    return operations.includes(op);
+}
+
 function allClear() {
-    operands = [];
+    clearCurrentOperands();
+    clearOldOperands();
     console.log("ALL CLEAR!");
-    changeDisplay(0);
+}
+
+function clearCurrentOperands() {
+    currentOperands = {
+        "numOne": "",
+        "numTwo": "",
+        "op": "",
+    }
+}
+
+function clearOldOperands () {
+    oldOperands = {
+        "results": "",
+        "oldNum": "",
+        "oldOp": "",
+    }
 }
 
 function performOtherOp(op) {
@@ -65,11 +92,12 @@ function changePercent(index) {
     return String(percentage);
 }
 
+// Select 
 function modifyNum(num) {
-    let lastIndex = operands.length - 1;
-
-    if (!operands[lastIndex].includes(".") || numbers.includes(num)) {
-        operands[lastIndex] += num;
+    if (currentOperands["op"] == "") {
+        currentOperands["numOne"] += num;
+    } else {
+        currentOperands["numTwo"] += num;
     }
 }
 
@@ -77,6 +105,7 @@ function evaluate(numOne, numTwo, operation) {
     let floatNumOne = parseFloat(numOne);
     let floatNumTwo = parseFloat(numTwo);
     let results;
+
     switch (operation) {
         case "+":
             results = add(floatNumOne, floatNumTwo);
@@ -94,7 +123,15 @@ function evaluate(numOne, numTwo, operation) {
             console.log("Hello from func evaluate");
     }
     results = String(results);
+    moveValues(results, numTwo, operation);
     return results;
+}
+
+function moveValues(results, numTwo, operation) {
+    oldOperands["results"] = results;
+    oldOperands["oldNum"] = numTwo;
+    oldOperands["oldOp"] = operation
+    clearCurrentOperands();
 }
 
 function onClick(event) {
@@ -103,13 +140,45 @@ function onClick(event) {
         allClear();
         return;
     }
-    // if val is num
+    
+    if (isNum(val)) {
+        modifyNum(val);
+    }
 
+    if (isOperation(val)) {
+        if (currentOperands["numOne"] && currentOperands["numTwo"] == "") {
+            // Only one operand, we don't need our old operands
+            clearOldOperands();
+        } else if (currentOperands["numOne"] && currentOperands["numTwo"]) {
+            // If two operands already, evaluate to create room for next number
+            evaluate(currentOperands["numOne"], currentOperands["numTwo"], currentOperands["op"]);
+            currentOperands["numOne"] = oldOperands["results"];
+        } else if (currentOperands["numOne"] == "" && oldOperands["results"]) {
+            // If there's no operand, then we are working on the previous result
+            currentOperands["numOne"] = oldOperands["results"];
+            clearOldOperands();
+        } else if (currentOperands["numOne"] == "" && oldOperands["results"] == "") {
+            // Since default display is 0, we will work with 0
+            currentOperands["numOne"] = "0";
+        }
+        currentOperands["op"] = val;
+    }
 
+    if (val == "=") {
+        if (currentOperands["numOne"] && currentOperands["numTwo"]) {
+            evaluate(currentOperands["numOne"], currentOperands["numTwo"], currentOperands["op"]);
+        }   else if (currentOperands["numOne"] && !currentOperands["numTwo"] && currentOperands["op"]) {
+            // If only numOne and an op, then we perform it on itself
+            evaluate(currentOperands["numOne"], currentOperands["numOne"], currentOperands["op"]);
+        }   else if (oldOperands["results"]) {
+            // If results then perform previous operations on results
+            evaluate(oldOperands["results"], oldOperands["oldNum"], oldOperands["oldOp"]);
+        }
+    }
 
-
-
-
+    console.log(currentOperands)
+    console.log(oldOperands);
+    console.log("############################################################################################");
 }
 
 let display = document.querySelector(".display");
@@ -118,13 +187,13 @@ buttons.forEach((button) => {
     button.addEventListener("click", onClick);
 });
 
-let operations = "+-/*";
-let equals = "=";
-let otherOps = "sign%";
-let operands = [];
-let storedNum = ""
-
-function isNum(num) {
-    let nums = "0123456789";
-    return nums.includes(num);
+let oldOperands = {
+    "results": "",
+    "oldNum": "",
+    "oldOp": "",
+}
+let currentOperands = {
+    "numOne": "",
+    "numTwo": "",
+    "op": "",
 }
